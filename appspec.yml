@@ -1,0 +1,16 @@
+version: 0.0
+os: ubuntu
+
+files:
+  - source: /
+    destination: /opt/payfinder
+permissions:
+  - object: /opt/payfinder/
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+hooks:
+  AfterInstall:
+    - location: deploy.sh
+      timeout: 60
+      runas: root
