@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPOSITORY=/opt/payfinder
+REPOSITORY=/opt/myapp
 cd $REPOSITORY
 
 APP_NAME=payfinder

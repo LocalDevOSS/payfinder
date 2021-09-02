@@ -1,11 +1,12 @@
 version: 0.0
-os: ubuntu
+os: linux
 
 files:
   - source: /
-    destination: /opt/payfinder
+    destination: /opt/myapp
 permissions:
-  - object: /opt/payfinder/
+  - object: /opt/myapp/
+    pattern: "**"
     owner: ubuntu
     group: ubuntu
     mode: 755
