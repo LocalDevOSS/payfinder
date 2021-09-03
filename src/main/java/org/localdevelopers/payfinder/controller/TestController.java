@@ -1,5 +1,6 @@
 package org.localdevelopers.payfinder.controller;
 
+<<<<<<< HEAD
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.localdevelopers.payfinder.dto.TestDto;
@@ -16,11 +17,14 @@ public class TestController {
 
     private TempRepository tempRepository;
 
+    @GetMapping
+    public String home() {
+        return "hello world";
+    }
+
     @GetMapping("/test")
     public void getTest() {
         List<TestDto> testDtos = tempRepository.findAll();
         log.info(testDtos.get(0).toString());
     }
-
-
 }
