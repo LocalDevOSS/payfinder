@@ -1,6 +1,5 @@
 package org.localdevelopers.payfinder.controller;
 
-<<<<<<< HEAD
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.localdevelopers.payfinder.dto.TestDto;
