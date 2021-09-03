@@ -2,6 +2,7 @@ package org.localdevelopers.payfinder.domain;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Document
 @Builder
 @Getter
+@ToString
 public class Store {
     @Id
     private ObjectId id;
