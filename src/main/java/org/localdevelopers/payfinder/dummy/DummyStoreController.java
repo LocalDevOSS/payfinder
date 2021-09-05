@@ -73,9 +73,9 @@ public class DummyStoreController {
             DummyStore dummyStore = new DummyStore();
             dummyStore.setName(m.get("CMPNM_NM"));
             dummyStore.setType(m.get("INDUTYPE_NM"));
-            dummyStore.setAddress(m.get("REFINE_ROADNM_ADDR"));
-            dummyStore.setLat(m.get("REFINE_WGS84_LAT"));
-            dummyStore.setLogt(m.get("REFINE_WGS84_LOGT"));
+            dummyStore.setRoadNameAddress(m.get("REFINE_ROADNM_ADDR"));
+            dummyStore.setLatitude(m.get("REFINE_WGS84_LAT"));
+            dummyStore.setLongitude(m.get("REFINE_WGS84_LOGT"));
             return dummyStore;
         }).collect(Collectors.toList());
     }
