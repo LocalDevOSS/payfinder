@@ -1,6 +1,8 @@
 package org.localdevelopers.payfinder.controller;
 
 import lombok.AllArgsConstructor;
+import org.localdevelopers.payfinder.dto.Filter;
+import org.localdevelopers.payfinder.dto.StoreResponse;
 import org.localdevelopers.payfinder.service.StoreService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,11 +28,21 @@ public class StoreController {
     }
 
     @GetMapping("stores")
-    public ResponseEntity getSearchRes(@RequestParam("keyword") final String keyword,
-                                       @RequestParam("pay_type") final String payType,
-                                       @RequestParam("store_type") final String storeType) {
+    public ResponseEntity getSearchRes(@RequestParam(value = "keyword", required = false) final String keyword,
+                                       @RequestParam(value = "pay_type", required = false) final String payType,
+                                       @RequestParam(value = "store_type", required = false) final String storeType) {
+        Filter filter = new Filter();
+        if(payType != null) {
+            filter.setPayType(payType);
+        } else if(storeType != null) {
+            filter.setStoreType(storeType);
+        }
 
-        return ResponseEntity.ok().build();
+        if(keyword == null) {
+            return ResponseEntity.ok(storeService.getStoreFilter(filter));
+        }
+
+        return ResponseEntity.ok(storeService.getStoreKeywordAndFilter(keyword, filter));
     }
 
 }
