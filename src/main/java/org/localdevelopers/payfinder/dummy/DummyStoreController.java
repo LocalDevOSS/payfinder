@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 
 /**
  * UI 더미 데이터 생성용 임시 컨트롤러
- * @author yw-park
  *
+ * @author yw-park
  */
 @Slf4j
 @RequestMapping("/dummy")
@@ -34,25 +34,35 @@ public class DummyStoreController {
     private final ObjectMapper objectMapper;
 
     private static final int SEARCH_SIZE = 1000;
-    private static final String EXTERNAL_API_URL_PREFIX = "https://openapi.gg.go.kr/RegionMnyFacltStus";
-    private static final String EXTERNAL_API_KEY = "25bdfa85672648398e79dd5cdd85da8c";
+
+    @Value("${dummy.external.api.prefix}")
+    private String EXTERNAL_API_URL_PREFIX;
+
+    @Value("${dummy.external.api.key}")
+    private String EXTERNAL_API_KEY;
 
     public DummyStoreController(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping
-    public List<DummyStore> storeList() throws UnsupportedEncodingException, JsonProcessingException {
+    public List<DummyStore> storeList(@RequestParam(required = false) String payType, @RequestParam(required = false) String storeType) throws UnsupportedEncodingException, JsonProcessingException {
 
         String decodeServiceKey = URLDecoder.decode(EXTERNAL_API_KEY, "UTF-8");
 
         RestTemplate restTemplate = new RestTemplate();
         new HttpHeaders().setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        UriComponents uri = UriComponentsBuilder.fromHttpUrl(EXTERNAL_API_URL_PREFIX).queryParam("KEY", decodeServiceKey)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(EXTERNAL_API_URL_PREFIX).queryParam("KEY", decodeServiceKey)
                 .queryParam("Type", "json")
-                .queryParam("pSize", SEARCH_SIZE)
-                .build(false); // 자동 Encoding 막기
+                .queryParam("pSize", SEARCH_SIZE);
+
+        if (StringUtils.hasText(payType)) {
+            builder.queryParam("SIGUN_NM", payType);
+        }
+
+        UriComponents uri = builder.build();
 
         String response = restTemplate.getForObject(uri.toUriString(), String.class);
         Map<String, Object> map = objectMapper.readValue(response, new TypeReference<Map<String, Object>>() {

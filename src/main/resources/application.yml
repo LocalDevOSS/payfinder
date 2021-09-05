@@ -1,3 +1,9 @@
 server.port: 8080
 
 spring.profiles.active: dev
+
+dummy:
+  external:
+    api:
+      prefix: https://openapi.gg.go.kr/RegionMnyFacltStus
+      key: 25bdfa85672648398e79dd5cdd85da8c
