@@ -1,12 +1,18 @@
 package org.localdevelopers.payfinder.dto;
 
+import com.mongodb.lang.Nullable;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
 @Data
+@Builder
 public class Filter {
-    private String payType;
-    private String storeType;
+    @Nullable
+    private String keyword;
+
+    @Nullable
+    private PayTypeField payType;
+
+    @Nullable
+    private StoreTypeField storeType;
 }

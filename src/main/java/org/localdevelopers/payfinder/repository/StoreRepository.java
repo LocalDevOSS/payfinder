@@ -5,12 +5,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
+
 public interface StoreRepository extends MongoRepository<Store, String> {
     List<Store> findByNameContaining(String keyword);
-    List<Store> findBySiGunNameStartsWith(String payType);
-    List<Store> findByTypeContaining(String storeType);
-    List<Store> findByNameContainingAndSiGunNameStartsWith(String keyword, String payType);
-    List<Store> findByNameContainingAndTypeContaining(String keyword, String storeType);
-    List<Store> findBySiGunNameStartsWithAndTypeContaining(String payType, String storeType);
-    List<Store> findByNameContainingAndSiGunNameStartsWithAndTypeContaining(String keyword, String payType, String storeType);
+    List<Store> findBySiGunNameEquals(String payType);
+    List<Store> findByTypeStartsWith(String storeType);
+    List<Store> findByNameContainingAndSiGunNameEquals(String keyword, String payType);
+    List<Store> findByNameContainingAndTypeStartsWith(String keyword, String storeType);
+    List<Store> findBySiGunNameEqualsAndTypeStartsWith(String payType, String storeType);
+    List<Store> findByNameContainingAndSiGunNameEqualsAndTypeStartsWith(String keyword, String payType, String storeType);
 }
