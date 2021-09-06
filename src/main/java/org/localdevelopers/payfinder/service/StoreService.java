@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -21,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StoreService {
     private StoreRepository storeRepository;
+    private final static int MAX_SEARCH_SIZE = 200;
 
     //6131a5f6d381964989921b4d - example
     @Transactional
@@ -105,7 +105,9 @@ public class StoreService {
             return true;
         });
 
-        return storeResponses.subList(0, 200);
+        return storeResponses.size() >= MAX_SEARCH_SIZE ?
+                storeResponses.subList(0, MAX_SEARCH_SIZE):
+                storeResponses.subList(0, storeResponses.size());
     }
 
 }
