@@ -15,4 +15,11 @@ public class Filter {
 
     @Nullable
     private StoreTypeField storeType;
+
+    @Nullable
+    private Double latitude;
+
+    @Nullable
+    private Double longitude;
+
 }
