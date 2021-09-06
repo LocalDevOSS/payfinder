@@ -24,56 +24,66 @@ public class StoreService {
     @Transactional
     public void getStoreInfo(final int storeIdx) {
 
-        Store store = storeRepository.findById("6131a5f6d381964989921b4d").orElseThrow(
+        final Store store = storeRepository.findById("6131a5f6d381964989921b4d").orElseThrow(
                 () -> new NotFoundException("StoreService.getStoreInfo"));
         log.info(store.toString());
     }
 
-    @Transactional
     public List<StoreResponse> getStoreFilter(final Filter filter) {
+        if(filter.getKeyword() == null) {
+            return getStoreNoKeyword(filter);
+        }
+        return getStoreWithKeyword(filter);
+    }
+
+    @Transactional
+    public List<StoreResponse> getStoreNoKeyword(final Filter filter) {
         List<Store> stores;
         if(filter.getPayType() == null && filter.getStoreType() == null){
             stores = storeRepository.findAll();
         } else if(filter.getPayType() == null) {
-            stores = storeRepository.findByTypeContaining(filter.getStoreType());
+            stores = storeRepository.findByTypeStartsWith(filter.getStoreType().getName());
         } else if(filter.getStoreType() == null) {
-            stores = storeRepository.findBySiGunNameStartsWith(filter.getPayType());
+            stores = storeRepository.findBySiGunNameEquals(filter.getPayType().getName());
         } else {
-            stores = storeRepository.findBySiGunNameStartsWithAndTypeContaining(filter.getPayType(), filter.getStoreType());
+            stores = storeRepository.findBySiGunNameEqualsAndTypeStartsWith(filter.getPayType().getName(), filter.getStoreType().getName());
         }
-        return cnvtResponse(stores);
+        return convertResponse(stores);
     }
 
     @Transactional
-    public List<StoreResponse> getStoreKeywordAndFilter(final String keyword,
-                             final Filter filter) {
+    public List<StoreResponse> getStoreWithKeyword(final Filter filter) {
         List<Store> stores;
         if(filter.getPayType() == null && filter.getStoreType() == null) {
-            stores = storeRepository.findByNameContaining(keyword);
+            stores = storeRepository.findByNameContaining(filter.getKeyword());
         } else if(filter.getPayType() == null) {
-            stores = storeRepository.findByNameContainingAndTypeContaining(keyword, filter.getStoreType());
+            stores = storeRepository.findByNameContainingAndTypeStartsWith(filter.getKeyword(), filter.getStoreType().getName());
         } else if(filter.getStoreType() == null) {
-            stores = storeRepository.findByNameContainingAndSiGunNameStartsWith(keyword, filter.getPayType());
+            stores = storeRepository.findByNameContainingAndSiGunNameEquals(filter.getKeyword(), filter.getPayType().getName());
         } else {
-            stores = storeRepository.findByNameContainingAndSiGunNameStartsWithAndTypeContaining(keyword, filter.getPayType(), filter.getStoreType());
+            stores = storeRepository.findByNameContainingAndSiGunNameEqualsAndTypeStartsWith(filter.getKeyword(), filter.getPayType().getName(), filter.getStoreType().getName());
         }
 
-        return cnvtResponse(stores);
+        return convertResponse(stores);
 
     }
 
-    private List<StoreResponse> cnvtResponse(List<Store> stores) {
+    private List<StoreResponse> convertResponse(List<Store> stores) {
         List<StoreResponse> storeResponses = new ArrayList<>();
         stores.forEach(store -> {
-            storeResponses.add(new StoreResponse(
-                    store.getId(),
-                    store.getSiGunName(),
-                    store.getName(),
-                    store.getType(),
-                    store.getRoadNameAddress(),
-                    store.getLatitude().toString(),
-                    store.getLongitude().toString()));
+            StoreResponse storeResponse = StoreResponse.builder()
+                    .id(store.getId())
+                    .sgName(store.getSiGunName())
+                    .name(store.getName())
+                    .type(store.getType())
+                    .address(store.getRoadNameAddress())
+                    .build();
 
+            if(store.getLatitude() != null && store.getLongitude() != null) {
+                storeResponse.setLatitude(store.getLatitude().toString());
+                storeResponse.setLongitude(store.getLongitude().toString());
+            }
+            storeResponses.add(storeResponse);
         });
         return storeResponses;
     }
