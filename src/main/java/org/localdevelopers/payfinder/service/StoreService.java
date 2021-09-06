@@ -7,10 +7,12 @@ import org.localdevelopers.payfinder.dto.Filter;
 import org.localdevelopers.payfinder.dto.StoreResponse;
 import org.localdevelopers.payfinder.exception.NotFoundException;
 import org.localdevelopers.payfinder.repository.StoreRepository;
+import org.localdevelopers.payfinder.utils.LocationDistance;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -48,7 +50,7 @@ public class StoreService {
         } else {
             stores = storeRepository.findBySiGunNameEqualsAndTypeStartsWith(filter.getPayType().getName(), filter.getStoreType().getName());
         }
-        return convertResponse(stores);
+        return convertResponse(stores, filter);
     }
 
     @Transactional
@@ -64,13 +66,13 @@ public class StoreService {
             stores = storeRepository.findByNameContainingAndSiGunNameEqualsAndTypeStartsWith(filter.getKeyword(), filter.getPayType().getName(), filter.getStoreType().getName());
         }
 
-        return convertResponse(stores);
+        return convertResponse(stores, filter);
 
     }
 
-    private List<StoreResponse> convertResponse(List<Store> stores) {
+    private List<StoreResponse> convertResponse(List<Store> stores, Filter filter) {
         List<StoreResponse> storeResponses = new ArrayList<>();
-        stores.forEach(store -> {
+        for (Store store : stores) {
             StoreResponse storeResponse = StoreResponse.builder()
                     .id(store.getId())
                     .sgName(store.getSiGunName())
@@ -78,14 +80,32 @@ public class StoreService {
                     .type(store.getType())
                     .address(store.getRoadNameAddress())
                     .build();
-
             if(store.getLatitude() != null && store.getLongitude() != null) {
-                storeResponse.setLatitude(store.getLatitude().toString());
-                storeResponse.setLongitude(store.getLongitude().toString());
+                storeResponse.setLatitude(store.getLatitude());
+                storeResponse.setLongitude(store.getLongitude());
             }
+
             storeResponses.add(storeResponse);
+        };
+
+        storeResponses.stream().filter(storeResponse -> {
+            if(filter.getLatitude() == null) {
+                return true;
+            }
+            if(storeResponse.getLatitude() == null){
+                return false;
+            }
+            Double dist = LocationDistance.distance(filter.getLatitude(),
+                        filter.getLongitude(),
+                        storeResponse.getLatitude(),
+                        storeResponse.getLongitude());
+            if(dist > 8) {
+                return false;
+            }
+            return true;
         });
-        return storeResponses;
+
+        return storeResponses.subList(0, 200);
     }
 
 }

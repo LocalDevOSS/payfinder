@@ -22,9 +22,9 @@ public class StoreResponse {
     private String address;
 
     @Nullable
-    private String latitude;
+    private Double latitude;
 
     @Nullable
-    private String longitude;
+    private Double longitude;
 
 }
