@@ -1,5 +1,6 @@
 package org.localdevelopers.payfinder.dto;
 
+import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,8 +21,10 @@ public class StoreResponse {
 
     private String address;
 
+    @Nullable
     private String latitude;
 
+    @Nullable
     private String longitude;
 
 }
