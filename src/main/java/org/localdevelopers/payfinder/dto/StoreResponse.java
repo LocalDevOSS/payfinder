@@ -27,4 +27,7 @@ public class StoreResponse {
     @Nullable
     private Double longitude;
 
+    @Nullable
+    private String imgUrl;
+
 }
