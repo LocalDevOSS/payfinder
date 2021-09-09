@@ -1,15 +1,18 @@
 package org.localdevelopers.payfinder.dto;
 
+import com.mongodb.lang.Nullable;
+
 public enum StoreTypeField {
-    RESTAURANT("일반휴게음식"),
+    RESTAURANT("음식" ),
     CLOTHES("의류"),
-    LODGE("숙박업"),
-    MART("유통업"),
-    DRINK("음료식품"),
-    ClINIC("의원"),
-    GASSTATION("연료판매점");
+    LODGE("숙박"),
+    MART("유통"),
+    DRINK("음료"),
+    ClINIC("보건"),
+    GASSTATION("연료");
 
     private final String name;
+
 
     StoreTypeField(String name) {
         this.name = name;

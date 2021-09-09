@@ -44,11 +44,11 @@ public class StoreService {
         if(filter.getPayType() == null && filter.getStoreType() == null){
             stores = storeRepository.findAll();
         } else if(filter.getPayType() == null) {
-            stores = storeRepository.findByTypeStartsWith(filter.getStoreType().getName());
+            stores = storeRepository.findByTypeContaining(filter.getStoreType().getName());
         } else if(filter.getStoreType() == null) {
             stores = storeRepository.findBySiGunNameEquals(filter.getPayType().getName());
         } else {
-            stores = storeRepository.findBySiGunNameEqualsAndTypeStartsWith(filter.getPayType().getName(), filter.getStoreType().getName());
+            stores = storeRepository.findBySiGunNameEqualsAndTypeContaining(filter.getPayType().getName(), filter.getStoreType().getName());
         }
         return convertResponse(stores, filter);
     }
@@ -59,11 +59,11 @@ public class StoreService {
         if(filter.getPayType() == null && filter.getStoreType() == null) {
             stores = storeRepository.findByNameContaining(filter.getKeyword());
         } else if(filter.getPayType() == null) {
-            stores = storeRepository.findByNameContainingAndTypeStartsWith(filter.getKeyword(), filter.getStoreType().getName());
+            stores = storeRepository.findByNameContainingAndTypeContaining(filter.getKeyword(), filter.getStoreType().getName());
         } else if(filter.getStoreType() == null) {
             stores = storeRepository.findByNameContainingAndSiGunNameEquals(filter.getKeyword(), filter.getPayType().getName());
         } else {
-            stores = storeRepository.findByNameContainingAndSiGunNameEqualsAndTypeStartsWith(filter.getKeyword(), filter.getPayType().getName(), filter.getStoreType().getName());
+            stores = storeRepository.findByNameContainingAndSiGunNameEqualsAndTypeContaining(filter.getKeyword(), filter.getPayType().getName(), filter.getStoreType().getName());
         }
 
         return convertResponse(stores, filter);
@@ -83,6 +83,9 @@ public class StoreService {
             if(store.getLatitude() != null && store.getLongitude() != null) {
                 storeResponse.setLatitude(store.getLatitude());
                 storeResponse.setLongitude(store.getLongitude());
+            }
+            if(store.getImageUrl() != null) {
+                storeResponse.setImgUrl(store.getImageUrl());
             }
 
             storeResponses.add(storeResponse);

@@ -31,11 +31,12 @@ public class Store {
     private Double longitude;           // 경도
     private String siGunCode;           // 시군코드
     private String siGunName;           // 시군명
+    private String imageUrl;
 
     public enum StoreFields {
         NAME("name"),
         TYPE("type"),
-        LOT_NUMBER_ADDRESS("lotNumberAddress"),
+        LOT_NUMBER_₩ADDRESS("lotNumberAddress"),
         ROAD_NAME_ADDRESS("roadNameAddress"),
         CREATE_AT("createAt"),
         ZIP_CODE("zipCode"),
